@@ -2,7 +2,23 @@
 {% block title %}
     Chapter {{ chapter }}, page {{ page }}
 {% endblock %}
-{% block body %}
-    <img src="https://blasto.enterprises/comics/{{ chapter }}/{{ page }}@m.jpg"
-         alt="Chapter {{ chapter }}, page {{ page }}"/>
+{% block contents %}
+    <div class="page">
+        <img src="https://blasto.enterprises/comics/{{ chapter }}/{{ page }}.png"
+             alt="Chapter {{ chapter }}, page {{ page }}"/>
+    </div>
+    <div class="lines">
+        <table>
+            <tr>
+                <th>Character</th>
+                <th>Line</th>
+            </tr>
+            {% for line in lines %}
+                <tr>
+                    <td>{{ line.character.name }}</td>
+                    <td>{{ line.text }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
 {% endblock %}
