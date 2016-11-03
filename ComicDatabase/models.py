@@ -9,20 +9,20 @@ class Chapter(models.Model):
     pageCount = models.IntegerField()
 
 
-class Line(models.Model):
-    """A line, said by a character on a page"""
-    text = models.TextField(max_length=500)
-    character = models.ForeignObject(Character, on_delete=models.CASCADE)
-    chapter = models.ForeignObject(Chapter, on_delete=models.CASCADE)
-    page = models.IntegerField()
+class Species(models.Model):
+    """A single species (think cat, dog)"""
+    name = models.TextField(max_length=200)
 
 
 class Character(models.Model):
     """A character in the comic"""
     name = models.TextField(max_length=200)
-    species = models.ForeignObject(Species, on_delete=models.CASCADE)
+    species = models.ForeignKey(Species, on_delete=models.CASCADE)
 
 
-class Species(models.Model):
-    """A single species (think cat, dog)"""
-    name = models.TextField(max_length=200)
+class Line(models.Model):
+    """A line, said by a character on a page"""
+    text = models.TextField(max_length=500)
+    character = models.ForeignKey(Character, on_delete=models.CASCADE)
+    chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE)
+    page = models.IntegerField()

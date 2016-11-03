@@ -1,0 +1,8 @@
+{% extends 'ComicDatabase/basic.html' %}
+{% block title %}
+    Chapter {{ chapter }}, page {{ page }}
+{% endblock %}
+{% block body %}
+    <img src="https://blasto.enterprises/comics/{{ chapter }}/{{ page }}@m.jpg"
+         alt="Chapter {{ chapter }}, page {{ page }}"/>
+{% endblock %}
