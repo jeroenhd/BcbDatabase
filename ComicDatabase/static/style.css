@@ -1,0 +1,40 @@
+html, body {
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    font-family: "Roboto", "Lucida Grande", Verdana, Arial, sans-serif;
+    padding: 0;
+    margin: 0;
+}
+
+.error {
+    color: darkred;
+}
+
+nav {
+    display: block;
+    height: 48px;
+    line-height: 48px;
+    width: 100%;
+    background-color: deepskyblue;
+}
+
+nav > ul {
+    margin: 0;
+}
+
+nav > ul > li {
+    visibility: visible;
+    width: auto;
+    display: inline-block;
+    list-style: none;
+    height: 100%;
+    padding: 0 8px;
+    margin: 0;
+}
+
+nav > ul > li > a, nav > ul > li > a:visited {
+    text-decoration: none;
+    color: white;
+    height: 100%;
+}

@@ -1,24 +1,43 @@
 {% extends 'ComicDatabase/basic.html' %}
 {% block title %}
-    Chapter {{ chapter }}, page {{ page }}
+    Chapter {{ chapter.number }}, page {{ page }}
 {% endblock %}
+
+{% block stylesheets %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static "browse.css" %}"/>
+{% endblock %}
+
 {% block contents %}
-    <div class="page">
-        <img src="https://blasto.enterprises/comics/{{ chapter }}/{{ page }}.png"
-             alt="Chapter {{ chapter }}, page {{ page }}"/>
+    <div class="search">
+        {% if terms %}
+            <a href="{% url 'ComicDatabase:search' terms %}">&larr;Go back to search results for
+                &quot;{{ terms }}&quot;</a>
+        {% endif %}
     </div>
-    <div class="lines">
-        <table>
-            <tr>
-                <th>Character</th>
-                <th>Line</th>
-            </tr>
-            {% for line in lines %}
+    <div class="split">
+        <div class="page">
+            <a href="https://www.bittersweetcandybowl.com/c{{ chapter.number }}/p{{ page }}/">
+                <img src="https://blasto.enterprises/comics/{{ chapter.number }}/{{ page }}{{ chapter.extension }}"
+                     alt="Chapter {{ chapter.number }}, page {{ page }}"/>
+            </a>
+        </div>
+        {% comment %}
+            Commented the newline because the extra text breaks HTML
+        {% endcomment %}
+        <div class="lines">
+            <table>
                 <tr>
-                    <td>{{ line.character.name }}</td>
-                    <td>{{ line.text }}</td>
+                    <th>Character</th>
+                    <th>Line</th>
                 </tr>
-            {% endfor %}
-        </table>
+                {% for line in lines %}
+                    <tr>
+                        <td>{{ line.character.name }}</td>
+                        <td>{{ line.text }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
     </div>
 {% endblock %}

@@ -1,0 +1,7 @@
+form, h1 {
+    padding-left: 16px;
+}
+
+ul.searchresults > li {
+    list-style: none;
+}

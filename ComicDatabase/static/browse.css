@@ -1,0 +1,27 @@
+div.page, div.lines {
+    width: 50%;
+    display: inline-block;
+    vertical-align: top;
+}
+
+div.lines th {
+    text-align: left;
+}
+
+div.lines td:nth-child(1) {
+    font-weight: bold;
+}
+
+html, body, div, img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+div.search > a {
+    text-decoration: none;
+    color: blue;
+    height: 48px;
+    line-height: 48px;
+    display: block;
+    padding-left: 16px;
+}

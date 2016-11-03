@@ -16,6 +16,9 @@ class Chapter(models.Model):
     pageCount = models.IntegerField()
     """The amount of pages that are in this chapter"""
 
+    extension = models.TextField(default=".png")
+    """The extension of the pages in this chapter"""
+
     def __str__(self):
         """'Chapter 1: Simple Pleasures (6 pages)'"""
         return "Chapter %s: %s (%s pages)" % (self.number, self.title, self.pageCount)

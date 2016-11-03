@@ -1,0 +1,26 @@
+{% extends 'ComicDatabase/basic.html' %}
+{% block stylesheets %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static "search.css" %}"/>
+{% endblock %}
+{% block contents %}
+    <form action="{% url 'ComicDatabase:search' '' %}" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+    </form>
+
+    {% if terms %}
+        <h1>Search results for &quot;{{ terms }}&quot;</h1>
+    {% endif %}
+    {% if results %}
+        <ul class="searchresults">
+            {% for result in results %}
+                <li>
+                    <p>&lt;{{ result.character.name }}&gt; {{ result.text }}</p>
+                    <a href="{% url 'ComicDatabase:page' result.chapter.number result.page terms %}">{{ result.chapter.title }},
+                        page {{ result.page }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}
