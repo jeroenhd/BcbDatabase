@@ -21,11 +21,9 @@
                 <img src="https://blasto.enterprises/comics/{{ chapter.number }}/{{ page }}{{ chapter.extension }}"
                      alt="Chapter {{ chapter.number }}, page {{ page }}"/>
             </a>
-        </div>
-        {% comment %}
+        </div>{% comment %}
             Commented the newline because the extra text breaks HTML
-        {% endcomment %}
-        <div class="lines">
+        {% endcomment %}<div class="lines">
             {% block linetable %}
             <table>
                 <tr>
