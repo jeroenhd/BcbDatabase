@@ -1,0 +1,23 @@
+{% extends 'ComicDatabase/page.html' %}
+{% block title %}Editing Chapter {{ chapter.number }}, page {{ page }}{% endblock %}
+{% block linetable %}
+    <table>
+        <tr>
+            <th>Character</th>
+            <th>Line</th>
+            <th>Actions</th>
+        </tr>
+        {% for line in lines %}
+            <tr>
+                <td>{{ line.character.name }}</td>
+                <td>{{ line.text }}</td>
+                <td>
+                    <a href="#up">&uparrow;</a>
+                    <a href="#down">&DownArrow;</a>
+                    <a href="#editline">[edit]</a>
+                    <a href="#delete">&cross;</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

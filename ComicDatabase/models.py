@@ -19,6 +19,9 @@ class Chapter(models.Model):
     extension = models.TextField(default=".png")
     """The extension of the pages in this chapter"""
 
+    class Meta:
+        ordering = ['number']
+
     def __str__(self):
         """'Chapter 1: Simple Pleasures (6 pages)'"""
         return "Chapter %s: %s (%s pages)" % (self.number, self.title, self.pageCount)
@@ -54,6 +57,7 @@ class Line(models.Model):
 
     class Meta:
         unique_together = (('chapter', 'page', 'order'),)
+        ordering = ['chapter', 'page', 'order']
 
     text = models.TextField(max_length=500)
     """The text of the line"""

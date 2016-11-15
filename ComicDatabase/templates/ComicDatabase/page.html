@@ -26,6 +26,7 @@
             Commented the newline because the extra text breaks HTML
         {% endcomment %}
         <div class="lines">
+            {% block linetable %}
             <table>
                 <tr>
                     <th>Character</th>
@@ -38,6 +39,7 @@
                     </tr>
                 {% endfor %}
             </table>
+            {% endblock %}
         </div>
     </div>
 {% endblock %}

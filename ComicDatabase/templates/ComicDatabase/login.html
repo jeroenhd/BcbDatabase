@@ -1,0 +1,30 @@
+{% extends 'ComicDatabase/basic.html' %}
+{% block stylesheets %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static "login.css" %}"/>
+{% endblock %}
+{% block contents %}
+    <div id="loginform">
+        <div class="one"><!--This is just for styling. I know, it's horrible to put display info in HTML--></div>
+        <form method="post">
+            {% csrf_token %}
+            <h1>Log in</h1>
+            <div>
+                <div><label for="username">Username</label></div>
+                <div><input type="text" name="username" id="username"/></div>
+            </div>
+            <div>
+                <div>
+                    <label for="password">Password</label>
+                </div>
+                <div>
+                    <input name="password" type="password" id="password"/>
+                </div>
+            </div>
+            <div>
+                <input type="submit" value="Log in"/>
+            </div>
+        </form>
+        <div class="two"><!--This is just for styling. I know, it's horrible to put display info in HTML--></div>
+    </div>
+{% endblock %}

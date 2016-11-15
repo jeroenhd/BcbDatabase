@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
@@ -10,7 +11,8 @@ from ComicDatabase.models import Line, Chapter
 
 def nav(request, chapter=None, page_=None, terms=None):
     """Render the navigation view"""
-    return render_to_string('ComicDatabase/nav.html', {'chapter': chapter, 'page': page_, 'terms': terms})
+    return render_to_string('ComicDatabase/nav.html',
+                            {'chapter': chapter, 'page': page_, 'terms': terms, 'user': request.user})
 
 
 def index(request):
@@ -29,6 +31,21 @@ def page(request, chapternr, page, terms):
         chapter.number = int(float(chapter.number))
 
     return render(request, 'ComicDatabase/page.html',
+                  {'chapter': chapter, 'page': page, 'terms': terms, 'lines': lines, 'nav': navbox})
+
+
+@login_required
+def page_edit(request, chapternr, page, terms):
+    chapter = Chapter.objects.filter(number=chapternr).first()
+
+    lines = Line.objects.filter(chapter__number=chapter.number, page=page).order_by('order')
+
+    navbox = nav(request, chapter, page, terms)
+
+    if float(chapter.number) == int(float(chapter.number)):
+        chapter.number = int(float(chapter.number))
+
+    return render(request, 'ComicDatabase/page_admin.html',
                   {'chapter': chapter, 'page': page, 'terms': terms, 'lines': lines, 'nav': navbox})
 
 

@@ -1,0 +1,36 @@
+form > div {
+    display: table;
+}
+
+form > div {
+    display: table-row;
+}
+
+form > div > div {
+    display: table-cell;
+}
+
+form > div > div:first-child {
+    padding-right: 8px;
+}
+
+div#loginform {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+form {
+    display: block;
+    margin: auto;
+    flex-grow: 1;
+}
+
+div.one {
+    flex-grow: 1;
+}
+
+div.two {
+    flex-grow: 2;
+}
