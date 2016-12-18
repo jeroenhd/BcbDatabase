@@ -1,15 +1,18 @@
 <nav>
     <ul>
-        <li><a href="{% url 'ComicDatabase:index' %}">Home</a></li>
-        <li><a href="{% url 'ComicDatabase:search' terms %}">Search</a></li>
+        <li class="left"><a href="{% url 'ComicDatabase:index' %}">Home</a></li>
+        <li class="left"><a href="{% url 'ComicDatabase:search' terms %}">Search</a></li>
         {% if chapter and page %}
-            <li><a href="https://www.bittersweetcandybowl.com/c{{ chapter.number }}/p{{ page }}/">Read the page on the
+            <li class="left"><a href="https://www.bittersweetcandybowl.com/c{{ chapter.number }}/p{{ page }}/">Read the page on the
                 BCB site</a></li>
         {% endif %}
         {% if user.is_authenticated %}
-            <li><a href="{% url 'ComicDatabase:logout' %}">Log out</a></li>
+            <li class="right"><a href="{% url 'ComicDatabase:logout' %}">Log out</a></li>
+            {% if page and chapter%}
+                <li class="right"><a href="{% url 'ComicDatabase:page_edit' chapternr=chapter.number page=page %}">Edit me</a></li>
+            {% endif %}
         {% else %}
-            <li><a href="{% url 'ComicDatabase:login' %}">Log in</a></li>
+            <li class="right"><a href="{% url 'ComicDatabase:login' %}">Log in</a></li>
         {% endif %}
     </ul>
 </nav>

@@ -26,7 +26,7 @@ def login_page(request):
             if previous is not None:
                 return redirect(previous)
             else:
-                return HttpResponseRedirect(request, redirect_to=reverse('ComicDatabase:index'))
+                return HttpResponseRedirect(redirect_to=reverse('ComicDatabase:index'))
     return render(request, 'ComicDatabase/login.html', context)
 
 
