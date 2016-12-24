@@ -21,3 +21,16 @@
         {% endfor %}
     </table>
 {% endblock %}
+{% block javascripts %}
+    {% load static %}
+    <script src="{% static 'api.js' %}"></script>
+    <script>
+        var server = new Server();
+
+        window.addEventListener('load', function () {
+           server.addLine(
+            1.0, 2, 6, 0, 'Heading out, Lucy dear?'
+            );
+        });
+    </script>
+{% endblock %}
