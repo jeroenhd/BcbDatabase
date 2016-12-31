@@ -3,14 +3,17 @@
  */
 
 
-var Server = function () {};
+var Server = function (chapter, page) {
+    this.chapterNumber = chapter;
+    this.pageNumber = page;
+};
+
+Server.VERSION = 'v1.0';
 
 /**
  * Get the lines belonging to a page
- * @param chapter The chapter number
- * @param page The page number
  */
-Server.prototype.getLines= function (chapter, page) {
+Server.prototype.getLines= function () {
     
 };
 
@@ -42,25 +45,46 @@ Server.prototype.changeLine = function (lineId, character, line) {
 
 /**
  * Delete a line
- * @param lineId The ID of the line to delete
+ * @param lineId int The ID of the line to delete
+ * @param cleanup function The function to call after success
  */
-Server.prototype.deleteLine = function (lineId) {
+Server.prototype.deleteLine = function (lineId, cleanup) {
+    var postUrl = '/api/' + Server.VERSION + '/lines/delete/'+ lineId + '/';
 
+    $.ajax({
+        url: postUrl,
+        success: function (data, textStatus, jqXHR) {
+            if (data.Result === 'Fail')
+            {
+                console.error('Failed to delete line ' + lineId + ': ' + data.reason);
+            } else {
+                if (undefined != cleanup)
+                {
+                    cleanup();
+                }
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+
+        }
+    });
 };
 
 /**
  * Add a new line
- * @param chapter The chapter to add to
- * @param page The page to add to
  * @param character The character speaking the line
- * @param order The order number
  * @param line The text of the line itself
+ * @param cleanup function The function to call afterward to clean up
  */
-Server.prototype.addLine = function (chapter, page, character, order, line) {
+Server.prototype.addLine = function (character, line, cleanup) {
+    var postUrl = '/api/' + Server.VERSION + '/lines/' + this.chapterNumber + '/' + this.pageNumber + '/new/' + character.id + '/' + encodeURIComponent(line) + '/';
     $.ajax({
-        url: '/api/v1.0/' + chapter + '/' + page + '/new/' + character.id + '/' + order + '/' + encodeURIComponent(line) + '/',
+        url: postUrl,
         success: function (data, textStatus, jqXHR) {
-            alert('Hurray: ' + data);
+            if (undefined != cleanup)
+            {
+                cleanup(data);
+            }
         },
         error: function (jqXHR, textStatus, errorThrown) {
             alert(errorThrown);

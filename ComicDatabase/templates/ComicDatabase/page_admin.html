@@ -11,26 +11,98 @@
             <tr>
                 <td>{{ line.character.name }}</td>
                 <td>{{ line.text }}</td>
-                <td>
+                <td data-line-id="{{ line.id }}" class="actions">
                     <a href="#up">&uparrow;</a>
                     <a href="#down">&DownArrow;</a>
                     <a href="#editline">&#x270E;</a>
-                    <a href="#delete">&cross;</a>
+                    <a class="delete" href="#delete">&cross;</a>
                 </td>
             </tr>
         {% endfor %}
+        <tr id="template">
+            <td></td>
+            <td></td>
+            <td id="actions_template" data-line-id="" class="actions">
+                <a href="#up">&uparrow;</a>
+                <a href="#down">&DownArrow;</a>
+                <a href="#editline">&#x270E;</a>
+                <a class="delete" href="#delete">&cross;</a>
+            </td>
+        </tr>
+        <tr id="new_line_form">
+            <td>
+                <select id="new_character">
+                {% for character in characters %}
+                    <option value="{{ character.id }}">{{ character.name }}</option>
+                {% endfor %}
+                </select>
+            </td>
+            <td>
+                <input type="text" name="line" id="new_line" placeholder="New line"/>
+            </td>
+            <td>
+                <button id="submit_new">+</button>
+            </td>
+        </tr>
     </table>
 {% endblock %}
 {% block javascripts %}
     {% load static %}
     <script src="{% static 'api.js' %}"></script>
     <script>
-        var server = new Server();
+        var server = new Server({{ chapter.number }}, {{ page }});
 
-        window.addEventListener('load', function () {
-           server.addLine(
-            1.0, 2, 6, 0, 'Heading out, Lucy dear?'
-            );
+        $("#submit_new").on('click', function () {
+            var character_dropdown = document.getElementById("new_character");
+            var new_line_text = document.getElementById("new_line");
+
+            var character = {id: character_dropdown.value, name: character_dropdown.options[character_dropdown.selectedIndex].text};
+
+            server.addLine(character, new_line_text.value, function (result) {
+                if (result.Result != "OK")
+                {
+                    alert("Something went wrong: " + result.reason);
+                    return;
+                }
+                var newLine = document.createElement("tr");
+
+                var tdCharacter = document.createElement("td");
+                var tdLine = document.createElement("td");
+                var tdActions = document.getElementById("actions_template").cloneNode(true);
+                tdActions.dataset.lineId = result.id;
+                var newLineForm = document.getElementById("new_line_form");
+
+                tdCharacter.innerHTML = result.character.name;
+                tdLine.innerHTML = result.line;
+
+                newLine.appendChild(tdCharacter);
+                newLine.appendChild(tdLine);
+                newLine.appendChild(tdActions);
+
+                setupActionListeners(newLine);
+
+                // table.childNodes = table.tbody
+                newLineForm.parentNode.insertBefore(newLine, newLineForm);
+            });
         });
+
+        $(".delete").on('click', deleteClick);
+        function deleteClick (args) {
+            var target = args.target;
+            var parent = target.parentNode;
+
+            var lineId = parent.dataset.lineId;
+
+            server.deleteLine(lineId, function () {
+                var lineControls = $('[data-line-id=' + lineId +']')[0];
+                var line = lineControls.parentNode;
+                line.parentNode.removeChild(line);
+            });
+        }
+
+        function setupActionListeners(actionBox)
+        {
+            $(actionBox).find(".delete").on('click', deleteClick);
+        }
     </script>
 {% endblock %}

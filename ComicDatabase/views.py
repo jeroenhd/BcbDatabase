@@ -6,7 +6,7 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 
 from ComicDatabase.classes import SearchForm
-from ComicDatabase.models import Line, Chapter
+from ComicDatabase.models import Line, Chapter, Character
 
 
 def nav(request, chapter=None, page_=None, terms=None):
@@ -45,8 +45,10 @@ def page_edit(request, chapternr, page, terms):
     if float(chapter.number) == int(float(chapter.number)):
         chapter.number = int(float(chapter.number))
 
+    characters = Character.objects.all()
+
     return render(request, 'ComicDatabase/page_admin.html',
-                  {'chapter': chapter, 'page': page, 'terms': terms, 'lines': lines, 'nav': navbox})
+                  {'chapter': chapter, 'page': page, 'terms': terms, 'lines': lines, 'nav': navbox, 'characters': characters})
 
 
 def search(request, terms=None):

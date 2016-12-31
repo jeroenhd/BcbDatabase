@@ -1,5 +1,6 @@
 import sys
 
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 
 from ComicDatabase.models import Character, Chapter, Line
@@ -50,12 +51,18 @@ def get_lines(request, chapter_number, page_number):
     return JsonResponse({'Result': 'OK', 'lines': lines})
 
 
-def add_line(request, chapter_number, page_number, character_id, line_text, order):
+def add_line(request, chapter_number, page_number, character_id, line_text):
     try:
         chapter_number = float(chapter_number)
         page_number = int(page_number)
         character_id = int(character_id)
-        order = int(order)
+        latest_line_query = Line.objects.filter(chapter__number=chapter_number, page=page_number)
+
+        try:
+            order = latest_line_query.latest('order').order
+            order += 1
+        except ObjectDoesNotExist:
+            order = 1
 
         newline = Line()
 
@@ -74,8 +81,19 @@ def add_line(request, chapter_number, page_number, character_id, line_text, orde
 
         newline.save()
 
-        return JsonResponse({'Result': 'OK', 'line': newline.text, 'order': newline.order})
+        return JsonResponse({'Result': 'OK', 'character': {'id': newline.character.id, 'name': newline.character.name, 'species': newline.character.species_id}, 'line': newline.text, 'order': newline.order, 'id': newline.pk})
     except:
         e = sys.exc_info()[0]
         return JsonResponse({'Result': 'Fail', 'reason': str(e)})
 
+
+def delete_line(request, id):
+    try:
+        int_id = int(id)
+        line = Line.objects.filter(id=int_id).first() # type: Line
+        line.delete()
+
+        return JsonResponse({'Result': 'OK'})
+    except:
+        e = sys.exc_info()[0]
+        return JsonResponse({'Result': 'Fail', 'reason': str(e)})

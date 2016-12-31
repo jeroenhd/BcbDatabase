@@ -24,7 +24,7 @@ SECRET_KEY = '%ryj#b)lfzh9^-vrs-6pqa7!=#69rgz8ecwror0nqg*lo)6+nw'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost','127.0.0.1','daisy.jeroenhd.nl', '*.daisy']
 
 # Application definition
 

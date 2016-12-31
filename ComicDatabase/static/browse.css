@@ -25,3 +25,11 @@ div.search > a {
     display: block;
     padding-left: 16px;
 }
+
+input#new_line{
+    width: 100%;
+}
+
+tr#template{
+    display: none;
+}
