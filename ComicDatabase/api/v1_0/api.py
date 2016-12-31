@@ -52,6 +52,8 @@ def get_lines(request, chapter_number, page_number):
 
 
 def add_line(request, chapter_number, page_number, character_id, line_text):
+    if not request.user.is_authenticated():
+        return JsonResponse({'Result': 'Fail', 'reason': 'Log in to execute this action'})
     try:
         chapter_number = float(chapter_number)
         page_number = int(page_number)
@@ -88,6 +90,8 @@ def add_line(request, chapter_number, page_number, character_id, line_text):
 
 
 def delete_line(request, id):
+    if not request.user.is_authenticated():
+        return JsonResponse({'Result': 'Fail', 'reason': 'Log in to execute this action'})
     try:
         int_id = int(id)
         line = Line.objects.filter(id=int_id).first() # type: Line
