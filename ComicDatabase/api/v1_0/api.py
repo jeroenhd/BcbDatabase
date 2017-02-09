@@ -1,5 +1,6 @@
 import sys
 
+from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 
@@ -51,6 +52,7 @@ def get_lines(request, chapter_number, page_number):
     return JsonResponse({'Result': 'OK', 'lines': lines})
 
 
+@login_required
 def add_line(request, chapter_number, page_number, character_id, line_text):
     if not request.user.is_authenticated():
         return JsonResponse({'Result': 'Fail', 'reason': 'Log in to execute this action'})
@@ -64,7 +66,7 @@ def add_line(request, chapter_number, page_number, character_id, line_text):
             order = latest_line_query.latest('order').order
             order += 1
         except ObjectDoesNotExist:
-            order = 1
+            order = 0
 
         newline = Line()
 
@@ -83,21 +85,62 @@ def add_line(request, chapter_number, page_number, character_id, line_text):
 
         newline.save()
 
-        return JsonResponse({'Result': 'OK', 'character': {'id': newline.character.id, 'name': newline.character.name, 'species': newline.character.species_id}, 'line': newline.text, 'order': newline.order, 'id': newline.pk})
+        return JsonResponse({'Result': 'OK', 'character': {'id': newline.character.id, 'name': newline.character.name,
+                                                           'species': newline.character.species_id},
+                             'line': newline.text, 'order': newline.order, 'id': newline.pk})
     except:
         e = sys.exc_info()[0]
         return JsonResponse({'Result': 'Fail', 'reason': str(e)})
 
 
+@login_required
 def delete_line(request, id):
     if not request.user.is_authenticated():
         return JsonResponse({'Result': 'Fail', 'reason': 'Log in to execute this action'})
     try:
         int_id = int(id)
-        line = Line.objects.filter(id=int_id).first() # type: Line
+        line = Line.objects.filter(id=int_id).first()  # type: Line
         line.delete()
 
         return JsonResponse({'Result': 'OK'})
     except:
         e = sys.exc_info()[0]
         return JsonResponse({'Result': 'Fail', 'reason': str(e)})
+
+
+@login_required
+def change_line_order(request, id, difference):
+    id = int(id)
+    difference = int(difference)
+
+    line = Line.objects.filter(id=id).first()  # type: Line
+    old_order = line.order
+    new_order = line.order + difference
+
+    swap_with = Line.objects. \
+        filter(page=line.page, chapter__number=line.chapter.number, order=new_order). \
+        first()  # type: Line
+
+    # Check if the line we're swapping the selected line with exists
+    if swap_with is None:
+        # It doesn't, hmm...
+        if difference < 0:
+            # We're all the way to the top!
+            return JsonResponse({'Result': 'OK', 'lineId': line.id, 'newAfterId': None})
+        else:
+            # We're all the way to the bottom!
+            swap_with = Line.objects.filter(page=line.page, chapter__number=line.chapter.number,
+                                            order=old_order - 1).first()  # type: Line
+
+            return JsonResponse({'Result': 'OK', 'lineId': line.id, 'newAfterId': swap_with.id})
+
+    line.order = new_order
+    swap_with.order = old_order
+
+    line.save()
+    swap_with.save()
+
+    if difference > 0:
+        return JsonResponse({'Result': 'OK', 'lineId': line.id, 'newAfterId': swap_with.id})
+    else:
+        return JsonResponse({'Result': 'OK', 'lineId': swap_with.id, 'newAfterId': line.id})

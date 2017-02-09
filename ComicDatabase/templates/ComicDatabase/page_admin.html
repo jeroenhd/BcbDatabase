@@ -12,8 +12,8 @@
                 <td>{{ line.character.name }}</td>
                 <td>{{ line.text }}</td>
                 <td data-line-id="{{ line.id }}" class="actions">
-                    <a href="#up">&uparrow;</a>
-                    <a href="#down">&DownArrow;</a>
+                    <a href="#up" class="order" data-order-difference="-1">&uparrow;</a>
+                    <a href="#down" class="order" data-order-difference="1">&DownArrow;</a>
                     <a href="#editline">&#x270E;</a>
                     <a class="delete" href="#delete">&cross;</a>
                 </td>
@@ -23,10 +23,10 @@
             <td></td>
             <td></td>
             <td id="actions_template" data-line-id="" class="actions">
-                <a href="#up">&uparrow;</a>
-                <a href="#down">&DownArrow;</a>
-                <a href="#editline">&#x270E;</a>
-                <a class="delete" href="#delete">&cross;</a>
+                <a href="#" class="order" data-order-difference="-1">&uparrow;</a>
+                <a href="#" class="order" data-order-difference="1">&DownArrow;</a>
+                <a href="#">&#x270E;</a>
+                <a class="delete" href="#">&cross;</a>
             </td>
         </tr>
         <tr id="new_line_form">
@@ -87,6 +87,10 @@
         });
 
         $(".delete").on('click', deleteClick);
+        /**
+         * Respond to clicking a delete button
+         * @param args The event arguments
+         **/
         function deleteClick (args) {
             var target = args.target;
             var parent = target.parentNode;
@@ -100,9 +104,76 @@
             });
         }
 
+        $("a.order").on('click', changeOrderClick);
+
+        /**
+         * Respond to clicking any of the order-changing buttons
+         * @param event The event being fired
+         */
+        function changeOrderClick(event) {
+            var target = event.target;
+            var parent = target.parentNode;
+
+            var lineId = parent.dataset.lineId;
+            var difference = target.dataset.orderDifference;
+
+            server.changeOrder(lineId, difference, swapAfterwards);
+        }
+
+        /**
+         * A cleanup function swapping two divs after the order of some lines have been update
+         * @param data The data from the server
+         */
+        function swapAfterwards(data)
+        {
+            if (data.Result != "OK")
+            {
+                alert('Error: ' + data.reason);
+            } else {
+                var lineId = data.lineId;
+                var newAfterId = data.newAfterId;
+                var trChanged = $('[data-line-id=' + lineId + ']')[0].parentNode;
+
+                if (newAfterId === null)
+                {
+                    // Move to the beginning
+                    // Already done (I think)
+
+                } else {
+                    var trAfter = $('[data-line-id=' + newAfterId + ']')[0].parentNode;
+                    $(trChanged).insertAfter($(trAfter));
+                    $(trAfter).insertBefore($(trChanged));
+                }
+
+                /*var trNewAfter;
+                if (newAfterId !== null)
+                {
+                    trNewAfter = $('[data-line-id=' + newAfterId + ']')[0].parentNode;
+                } else {
+                    trNewAfter = null;
+                }
+
+                var container = trChanged.parentNode;
+
+                if (trNewAfter == undefined)
+                {
+                    alert('Something went wrong, reload the page!');
+                } else {
+                    container.insertBefore(trChanged, trNewAfter);
+                    if (trNewAfter != null)
+                        container.insertAfter(trNewAfter, trChanged);
+                }*/
+            }
+        }
+
+        /**
+         * Set up javascript listeners for a new line
+         * @param actionBox
+         */
         function setupActionListeners(actionBox)
         {
             $(actionBox).find(".delete").on('click', deleteClick);
+            $(actionBox).find(".order").on('click', changeOrderClick);
         }
     </script>
 {% endblock %}

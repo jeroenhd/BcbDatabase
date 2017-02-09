@@ -19,11 +19,24 @@ Server.prototype.getLines= function () {
 
 /**
  * Change the order of a line
- * @param lineId The ID of the line
- * @param difference The difference (+1/-1)
+ * @param lineId int The ID of the line
+ * @param difference int The difference (+1/-1)
+ * @param cleanup function The cleanup function to execute after success
  */
-Server.prototype.changeOrder = function (lineId, difference) {
-
+Server.prototype.changeOrder = function (lineId, difference, cleanup) {
+    var postUrl = '/api/' + Server.VERSION + '/lines/order/' + lineId + '/' + difference + '/';
+    $.ajax({
+        url: postUrl,
+        success: function (data, textStatus, jqXHR) {
+            if (cleanup != undefined)
+            {
+                cleanup(data);
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            alert('Error: ' + errorThrown);
+        }
+    });
 };
 
 /**
@@ -65,7 +78,7 @@ Server.prototype.deleteLine = function (lineId, cleanup) {
             }
         },
         error: function (jqXHR, textStatus, errorThrown) {
-
+            alert('Error: ' + errorThrown)
         }
     });
 };
