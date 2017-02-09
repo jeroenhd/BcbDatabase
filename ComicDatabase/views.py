@@ -46,9 +46,16 @@ def page_edit(request, chapternr, page, terms):
         chapter.number = int(float(chapter.number))
 
     characters = Character.objects.all()
+    chars = []
+    for i in range(0, len(characters)):
+        characters[i].line_count = Line.objects.filter(character=characters[i]).count()
+
+        chars.append(characters[i])
+
+    chars.sort(key=lambda x: -x.line_set.count())
 
     return render(request, 'ComicDatabase/page_admin.html',
-                  {'chapter': chapter, 'page': page, 'terms': terms, 'lines': lines, 'nav': navbox, 'characters': characters})
+                  {'chapter': chapter, 'page': page, 'terms': terms, 'lines': lines, 'nav': navbox, 'characters': chars})
 
 
 def search(request, terms=None):

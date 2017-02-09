@@ -33,3 +33,6 @@ input#new_line{
 tr#template{
     display: none;
 }
+div.split{
+    padding: 16px 96px;
+}
