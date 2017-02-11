@@ -4,7 +4,7 @@
         <li class="left">
             <form method="post" action="{% url 'ComicDatabase:search' %}">
                 {% csrf_token %}
-                <input type="text" name="terms" placeholder="Search terms">
+                <input type="text" name="terms" placeholder="Search terms"{% if terms %} value="{{ terms }}"{% endif %}>
                 <input type="submit" value="Search">
             </form>
         </li>
@@ -14,11 +14,22 @@
         {% endif %}
         {% if user.is_authenticated %}
             <li class="right"><a href="{% url 'ComicDatabase:logout' %}">Log out</a></li>
-            {% if page and chapter%}
+            {% if page and chapter %}
+                {% if not editing %}
                 <li class="right"><a href="{% url 'ComicDatabase:page_edit' chapternr=chapter.number page=page %}">Edit me</a></li>
+                {% else %}
+                <li class="right"><a href="{% url 'ComicDatabase:page' chapternr=chapter.number page=page %}">Finished editing</a></li>
+                {% endif %}
             {% endif %}
         {% else %}
             <li class="right"><a href="{% url 'ComicDatabase:login' %}">Log in</a></li>
         {% endif %}
+        <li class="right">
+            <select id="select_chapter" autocomplete="off">
+                {% for c in all_chapters %}
+                <option {% if c.number == chapter.number %}selected="selected" {% endif %}value="{{ c.number }}">{{ c.number }}: {{ c.title }}</option>
+                {% endfor %}
+            </select>
+        </li>
     </ul>
 </nav>

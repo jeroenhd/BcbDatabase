@@ -10,10 +10,13 @@ from ComicDatabase.classes import SearchForm
 from ComicDatabase.models import Line, Chapter, Character
 
 
-def nav(request, chapter=None, page_=None, terms=None):
+def nav(request, chapter_=None, page_=None, terms=None, editing=False):
     """Render the navigation view"""
+
+    all_chapters = Chapter.objects.all()
+
     return render_to_string('ComicDatabase/nav.html',
-                            {'chapter': chapter, 'page': page_, 'terms': terms, 'user': request.user})
+                            {'chapter': chapter_, 'page': page_, 'terms': terms, 'user': request.user, 'editing': editing, 'all_chapters': all_chapters}, request)
 
 
 def index(request):
@@ -24,14 +27,14 @@ def index(request):
 
 # Create your views here.
 def page(request, chapternr, page, terms):
-    chapter = Chapter.objects.filter(number=chapternr).first()  # type: Chapter
+    current_chapter = Chapter.objects.filter(number=chapternr).first()  # type: Chapter
 
-    lines = Line.objects.filter(chapter__number=chapter.number, page=page).order_by('order')
+    lines = Line.objects.filter(chapter__number=current_chapter.number, page=page).order_by('order')
 
-    nav_box = nav(request, chapter, page, terms)
+    nav_box = nav(request, current_chapter, page, terms)
 
-    if float(chapter.number) == int(float(chapter.number)):
-        chapter.number = int(float(chapter.number))
+    if float(current_chapter.number) == int(float(current_chapter.number)):
+        current_chapter.number = int(float(current_chapter.number))
 
     page = int(page)
 
@@ -40,19 +43,19 @@ def page(request, chapternr, page, terms):
     if page < 1:
         new_chapter = Chapter.objects.filter(number__lt=chapternr).first()
         if new_chapter is None:
-            new_chapter = chapter
+            new_chapter = current_chapter
         page = new_chapter.pageCount
-    elif page > chapter.pageCount:
+    elif page > current_chapter.pageCount:
         new_chapter = Chapter.objects.filter(number__gt=chapternr).order_by('-number').first()
         if new_chapter is None:
-            new_chapter = chapter
+            new_chapter = current_chapter
         page = 1
 
     if new_chapter is not None:
-        chapter = new_chapter
+        current_chapter = new_chapter
 
     return render(request, 'ComicDatabase/page.html',
-                  {'chapter': chapter, 'page': page, 'terms': terms, 'lines': lines, 'nav': nav_box})
+                  {'chapter': current_chapter, 'page': page, 'terms': terms, 'lines': lines, 'nav': nav_box})
 
 
 @login_required
@@ -61,7 +64,7 @@ def page_edit(request, chapternr, page, terms):
 
     lines = Line.objects.filter(chapter__number=chapter.number, page=page).order_by('order')
 
-    nav_box = nav(request, chapter, page, terms)
+    nav_box = nav(request, chapter, page, terms, True)
 
     if float(chapter.number) == int(float(chapter.number)):
         chapter.number = int(float(chapter.number))
@@ -89,7 +92,7 @@ def search(request, terms=None):
         form = SearchForm()
 
     results = Line.objects.filter(text__search=terms)
-    nav_box = nav(request)
+    nav_box = nav(request, None, None, terms)
     return render(request, 'ComicDatabase/search.html',
                   {'results': results, 'terms': terms, 'nav': nav_box, 'form': form})
 
@@ -118,5 +121,5 @@ def chapter(request, chapter_number):
         pages.append({'number': p, 'line_count': line_count, 'characters': characters})
 
     return render(request, 'ComicDatabase/index_chapter.html', {
-        'nav': nav(request, chapter_number), 'pages': pages, 'chapter': c
+        'nav': nav(request, c), 'pages': pages, 'chapter': c
     })

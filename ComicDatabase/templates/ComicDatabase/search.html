@@ -1,14 +1,15 @@
 {% extends 'ComicDatabase/basic.html' %}
+{% load static %}
 {% block stylesheets %}
-    {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static "search.css" %}"/>
 {% endblock %}
 {% block contents %}
+    <div class="singlerowcontent">
+         {% comment %}
     <form action="{% url 'ComicDatabase:search' '' %}" method="post">
         {% csrf_token %}
         {{ form.as_p }}
-    </form>
-
+    </form>{% endcomment %}
     {% if terms %}
         <h1>Search results for &quot;{{ terms }}&quot;</h1>
     {% endif %}
@@ -23,4 +24,5 @@
             {% endfor %}
         </ul>
     {% endif %}
+    </div>
 {% endblock %}

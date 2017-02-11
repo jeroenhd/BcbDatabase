@@ -67,3 +67,11 @@ div.lines > *
 {
     width: 100%;
 }
+
+/* This part of the website only works if the user has enabled javascript.
+ * To accommodate for users without Javascript, this element is invisible by default and made visible using JS
+ */
+select#select_chapter
+{
+    visibility: hidden;
+}
