@@ -11,7 +11,7 @@ html, body {
     color: darkred;
 }
 
-nav {
+nav#main {
     display: block;
     height: 48px;
     line-height: 48px;
@@ -19,7 +19,7 @@ nav {
     background-color: deepskyblue;
 }
 
-nav > ul {
+nav#main > ul {
     margin: 0;
 }
 
@@ -33,7 +33,7 @@ nav > ul > li {
     margin: 0;
 }
 
-nav > ul > li > a, nav > ul > li > a:visited {
+nav#main > ul > li > a, nav > ul > li > a:visited {
     text-decoration: none;
     color: white;
     height: 100%;
@@ -46,4 +46,24 @@ li.left {
 li.right
 {
     float: right;
+}
+
+nav#comicnav > ul
+{
+    list-style: none;
+    display: block;
+    width: 100%;
+}
+nav#comicnav li:first-child
+{
+    float: left;
+}
+nav#comicnav li:last-child
+{
+    float: right;
+}
+
+div.lines > *
+{
+    width: 100%;
 }

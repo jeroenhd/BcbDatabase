@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    {% load static %}
     <meta charset="UTF-8">
     <title>{% block title %}BCB Database{% endblock %}</title>
-    <link rel="stylesheet" type="text/css" href="{% static "style.css" %}"/>
+    {% load static %}<link rel="stylesheet" type="text/css" href="{% static "style.css" %}"/>
     {% block stylesheets %}
     {% endblock %}
 </head>

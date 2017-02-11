@@ -33,6 +33,14 @@ input#new_line{
 tr#template{
     display: none;
 }
-div.split{
+
+div.split, div.singlerowcontent{
     padding: 16px 96px;
+}
+
+li.page
+{
+    display: inline-block;
+    vertical-align: top;
+    list-style: none;
 }

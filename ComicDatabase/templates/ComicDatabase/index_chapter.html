@@ -1,0 +1,31 @@
+{% extends 'ComicDatabase/basic.html' %}
+{% load static %}
+{% block title %}Chapter {{ chapter.number }}: {{ chapter.title }} | The BCB Database{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{% static 'browse.css' %}">
+{% endblock %}
+{% block contents %}
+    <div class="singlerowcontent">
+        <div id="chapterdescription">
+            <h2>Chapter {{ chapter.number }}: {{ chapter.title }}</h2>
+            <h3>{{ chapter.description }}</h3>
+            <p>This chapter has {{ chapter.pageCount }} pages. As of now, {{ chapter.line_set.count }} lines have been transcribed!</p>
+        </div>
+
+        <ul>
+        {% for page in pages %}
+            <li class="page">
+                <h3><a href="{% url 'ComicDatabase:page' chapter.number page.number %}">Page {{ page.number }} ({{ page.line_count }} lines)</a></h3>
+                <p>
+                    Featuring:
+                    <ul>
+                    {% for character in page.characters %}
+                        <li>{{ character.name }}, having {{ character.line_count }} line{{ character.line_count|pluralize }}!</li>
+                    {% endfor %}
+                    </ul>
+                </p>
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

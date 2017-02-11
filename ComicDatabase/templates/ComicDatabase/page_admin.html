@@ -47,6 +47,7 @@
     </table>
 {% endblock %}
 {% block javascripts %}
+    {{ parent }}
     {% load static %}
     <script src="{% static 'api.js' %}"></script>
     <script>

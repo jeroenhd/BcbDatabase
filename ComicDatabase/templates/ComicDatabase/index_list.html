@@ -1,0 +1,28 @@
+{% extends 'ComicDatabase/basic.html' %}
+{% block title %}BCB Transcription Database{% endblock %}
+{% block stylesheets %}
+    {% load static %}<link rel="stylesheet" href="{% static 'browse.css' %}">
+{% endblock %}
+{% block contents %}
+    <div class="singlerowcontent">
+        <div id="about">
+            <h1>The BCB Transcription Database</h1>
+            <p>This website contains a (partial?) transcription database for the webcomic <a href="https://www.bittersweetcandybowl.com/">Bittersweet Candy Bowl</a>. This is a separate project; there is not relation between this website and Bittersweet Candy Bowl at all. It is run by volunteers who are fans of the comic.</p>
+            <p>If you have any suggestions, please let us know! You can <a href="https://www.bittersweetcandybowl.com/chat">join the BCB IRC chat</a> or <a class="mailto" href="#">you can email me!</a> </p>
+        </div>
+
+        <ul id="chapterlist">
+        {% for chapter in chapters %}
+            <li class="chapter">
+                <h2><a href="{% url 'ComicDatabase:chapter' chapter.number %}">{{ chapter.title }}</a></h2>
+                <p>{{ chapter.description }}</p>
+                <p>{{ chapter.pageCount }} pages with {{ chapter.line_set.count }} transcribed lines</p>
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+
+{% endblock %}
+{% block javascripts %}
+    <script src="{% static 'mailto.js' %}"></script>
+{% endblock %}
