@@ -37,10 +37,3 @@ tr#template{
 div.split, div.singlerowcontent{
     padding: 16px 96px;
 }
-
-li.page
-{
-    display: inline-block;
-    vertical-align: top;
-    list-style: none;
-}

@@ -27,7 +27,7 @@
         <li class="right">
             <select id="select_chapter" autocomplete="off">
                 {% for c in all_chapters %}
-                <option {% if c.number == chapter.number %}selected="selected" {% endif %}value="{{ c.number }}">{{ c.number }}: {{ c.title }}</option>
+                <option {% if c.number == chapter.number %}selected="selected" {% endif %}value="{{ c.number|floatformat }}">{{ c.number|floatformat }}: {{ c.title }}</option>
                 {% endfor %}
             </select>
         </li>

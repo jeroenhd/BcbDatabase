@@ -75,3 +75,24 @@ select#select_chapter
 {
     visibility: hidden;
 }
+
+ul#chapterlist{
+    display: flex;
+    flex-wrap: wrap;
+}
+li.chapter{
+    list-style: none;
+    flex-basis: 33%;
+}
+
+li.page
+{
+    display: inline-block;
+    vertical-align: top;
+    list-style: none;
+}
+div#chapterdescription > div
+{
+    display: inline-block;
+    vertical-align: top;
+}

@@ -14,7 +14,10 @@
         <ul id="chapterlist">
         {% for chapter in chapters %}
             <li class="chapter">
-                <h2><a href="{% url 'ComicDatabase:chapter' chapter.number %}">{{ chapter.title }}</a></h2>
+                <a href="{% url 'ComicDatabase:chapter' chapter.number %}">
+                    <img src="https://www.bittersweetcandybowl.com/app/comics/icon/{{ chapter.number|floatformat}}.png" alt="Chapter {{ chapter.number|floatformat }} icon"/>
+                    <h2>{{ chapter.title }}</h2>
+                </a>
                 <p>{{ chapter.description }}</p>
                 <p>{{ chapter.pageCount }} pages with {{ chapter.line_set.count }} transcribed lines</p>
             </li>
