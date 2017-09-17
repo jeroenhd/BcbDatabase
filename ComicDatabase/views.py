@@ -45,8 +45,8 @@ def page(request, chapternr, page, terms):
         if new_chapter is None:
             new_chapter = current_chapter
         page = new_chapter.pageCount
-    elif page > current_chapter.pageCount:
-        new_chapter = Chapter.objects.filter(number__gt=chapternr).order_by('-number').first()
+    if page > current_chapter.pageCount:
+        new_chapter = Chapter.objects.filter(number__gt=chapternr).order_by('number').first()
         if new_chapter is None:
             new_chapter = current_chapter
         page = 1
@@ -109,7 +109,7 @@ def chapter(request, chapter_number):
         raise Http404('No chapter found for chapter number ' + chapter_number)
 
     pages = []
-    for p in range(0, c.pageCount):
+    for p in range(1, c.pageCount + 1):
         lines = Line.objects.filter(chapter__number=c.number, page=p)
         line_count = lines.count()
 
