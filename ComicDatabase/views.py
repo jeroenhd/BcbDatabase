@@ -109,7 +109,7 @@ def chapter(request, chapter_number):
         raise Http404('No chapter found for chapter number ' + chapter_number)
 
     pages = []
-    for p in range(1, c.pageCount):
+    for p in range(0, c.pageCount):
         lines = Line.objects.filter(chapter__number=c.number, page=p)
         line_count = lines.count()
 
